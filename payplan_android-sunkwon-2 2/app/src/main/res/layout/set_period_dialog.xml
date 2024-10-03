@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10dp"
+    android:background="@drawable/custom_dialog_background"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:backgroundTint="#444446"
+        app:cardCornerRadius="10dp">
+
+        <TextView
+            android:id="@+id/start_date"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:background="@android:color/transparent"
+            android:layout_marginLeft="4dp"
+            android:gravity="start|center"
+            android:text="시작일"
+            android:textSize="18sp"
+            android:textColor="#aeaeb2"
+            tools:ignore="MissingConstraints"/>
+
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:backgroundTint="#444446"
+        app:cardCornerRadius="10dp">
+
+        <TextView
+            android:id="@+id/end_date"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:background="@android:color/transparent"
+            android:layout_marginLeft="4dp"
+            android:gravity="start|center"
+            android:text="종료일"
+            android:textSize="18sp"
+            android:textColor="#aeaeb2"
+            tools:ignore="MissingConstraints"/>
+
+    </androidx.cardview.widget.CardView>
+
+        <ImageButton
+            android:id="@+id/savePeriod_Btn"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginTop="3dp"
+            android:layout_gravity="end"
+            android:src="@drawable/ic_check_circle"
+            android:backgroundTint="@android:color/transparent"
+            android:scaleType="fitCenter"
+            app:tint="#aeaeb2"/>
+
+</LinearLayout>

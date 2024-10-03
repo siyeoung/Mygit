@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#242426">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/topAppBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#bf5af2">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center">
+
+                <ImageButton
+                    android:id="@+id/previousDay_Btn"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:backgroundTint="@android:color/transparent"
+                    android:src="@drawable/ic_left"
+                    android:scaleType="fitCenter"/>
+
+                <Button
+                    android:id="@+id/date_indicator"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@android:color/transparent"
+                    android:layout_gravity="center"
+                    android:text="0000-00-00"
+                    android:textSize="17sp"
+                    android:textStyle="bold"/>
+
+                <ImageButton
+                    android:id="@+id/nextDay_Btn"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:backgroundTint="@android:color/transparent"
+                    android:src="@drawable/ic_right"
+                    android:scaleType="fitCenter"/>
+
+            </LinearLayout>
+
+        </com.google.android.material.appbar.MaterialToolbar>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <!-- RecyclerView가 NestedScrollView로 감싸져 있고,
+    전체 레이아웃 형식이 CoordinatorLayout임.
+    따라서 RecyclerView 주변에 다른 레이아웃 추가 시,
+    NestedScrollView 영역을 알맞게 조정해야 함 -->
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/nestedScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="?attr/actionBarSize"
+        android:clipToPadding="false"
+        android:paddingBottom="100dp">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:padding="16dp"/>
+
+    </androidx.core.widget.NestedScrollView>
+
+    <com.google.android.material.bottomappbar.BottomAppBar
+        android:id="@+id/bottomAppBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        app:backgroundTint="#bf5af2"
+        app:fabAlignmentMode="center"
+        app:fabAnchorMode="cradle"
+        app:fabCradleMargin="8dp"
+        app:fabCradleRoundedCornerRadius="10dp"
+        app:fabCradleVerticalOffset="0dp"
+        app:layout_anchor="@+id/nestedScrollView"
+        app:layout_anchorGravity="bottom|center"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:gravity="center"
+        android:layout_gravity="bottom|center"
+        android:backgroundTint="@android:color/transparent">
+
+        <ImageButton
+            android:id="@+id/rankingButton"
+            android:src="@drawable/ic_ranking"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginRight="20dp"
+            android:backgroundTint="@android:color/transparent"
+            android:scaleType="fitCenter"/>
+
+        <ImageButton
+            android:id="@+id/calender"
+            android:src="@drawable/ic_calendar"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginRight="47dp"
+            android:backgroundTint="@android:color/transparent"
+            android:scaleType="fitCenter"/>
+
+        <ImageButton
+            android:id="@+id/lists"
+            android:src="@drawable/ic_store"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginLeft="47dp"
+            android:backgroundTint="@android:color/transparent"
+            android:scaleType="fitCenter"/>
+
+        <ImageButton
+            android:id="@+id/settings"
+            android:src="@drawable/ic_settings"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginLeft="20dp"
+            android:backgroundTint="@android:color/transparent"
+            android:scaleType="fitCenter"/>
+
+    </LinearLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/add_Btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:tint="#e8eaed"
+        app:backgroundTint="#bf5af2"
+        app:layout_anchor="@id/bottomAppBar"
+        app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Full"
+        app:srcCompat="@drawable/ic_add"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/amountInfo_Btn"
+        android:src="@drawable/ic_paid"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_marginTop="78dp"
+        android:layout_marginRight="12dp"
+        app:tint="#ff9f0a"
+        app:backgroundTint="#444446"
+        app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.Full"
+        app:maxImageSize="48dp"/>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
+

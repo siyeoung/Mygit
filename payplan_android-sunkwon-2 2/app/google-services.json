@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "568906709465",
+    "project_id": "payplan-49ecb",
+    "storage_bucket": "payplan-49ecb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:568906709465:android:3a439da2b47aa70521c1c8",
+        "android_client_info": {
+          "package_name": "com.byunggil.project_team5"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA5Mhzs3Ht9Cp7Ed5RRYdNyiW-dIqCTVhQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">project_team5</string>
+    <string name="title_activity_splash">SplashActivity</string>
+
+    <!-- 다른 문자열 리소스들 -->
+    <string-array name="ranking_options">
+        <item>주간 랭킹</item>
+        <item>월간 랭킹</item>
+        <item>연간 랭킹</item>
+    </string-array>
+    <string-array name="casual_ranking_options">
+        <item>주간 랭킹</item>
+        <item>월간 랭킹</item>
+        <item>연간 랭킹</item>
+    </string-array>
+    <string-array name="high_stakes_ranking_options">
+        <item>주간 랭킹</item>
+        <item>월간 랭킹</item>
+        <item>연간 랭킹</item>
+    </string-array>
+
+</resources>
