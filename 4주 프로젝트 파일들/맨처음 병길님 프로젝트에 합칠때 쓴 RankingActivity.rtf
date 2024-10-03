@@ -1,0 +1,1110 @@
+{\rtf1\ansi\ansicpg949\cocoartf2761
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fmodern\fcharset0 Courier;\f1\fnil\fcharset0 Menlo-Regular;\f2\fmodern\fcharset0 Courier-Oblique;
+\f3\fmodern\fcharset0 Courier-Bold;}
+{\colortbl;\red255\green255\blue255;\red191\green100\blue38;\red32\green32\blue32;\red153\green168\blue186;
+\red109\green109\blue109;\red133\green96\blue154;\red88\green118\blue71;\red254\green187\blue91;\red86\green132\blue173;
+\red55\green101\blue209;\red173\green169\blue32;}
+{\*\expandedcolortbl;;\csgenericrgb\c74902\c39216\c14902;\csgenericrgb\c12549\c12549\c12549;\csgenericrgb\c60000\c65882\c72941;
+\csgenericrgb\c42745\c42745\c42745;\csgenericrgb\c52157\c37647\c60392;\csgenericrgb\c34510\c46275\c27843;\csgenericrgb\c99608\c73333\c35686;\csgenericrgb\c33725\c51765\c67843;
+\csgenericrgb\c21569\c39608\c81961;\csgenericrgb\c67843\c66275\c12549;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f0\fs26 \cf2 \cb3 RankingActivity\
+\
+package \cf4 com.byunggil.project_team5\
+\
+\cf5 // 
+\f1 \uc0\u50584 \u44032  \u47700 \u51064 \
+
+\f0 \cf2 import \cf4 android.os.Bundle\
+\cf2 import \cf4 android.widget.TextView\
+\cf2 import \cf4 android.widget.Toast\
+\cf2 import \cf4 androidx.appcompat.app.AppCompatActivity\
+\cf2 import \cf4 androidx.recyclerview.widget.LinearLayoutManager\
+\cf2 import \cf4 androidx.recyclerview.widget.RecyclerView\
+\cf2 import \cf4 com.google.firebase.database.*\
+\
+\cf2 class \cf4 RankingActivity : AppCompatActivity() \{\
+\
+    \cf2 private lateinit var \cf6 rankingRecyclerView\cf4 : RecyclerView\
+    \cf2 private lateinit var \cf6 myRankingTextView\cf4 : TextView\
+    \cf2 private lateinit var \cf6 myNicknameTextView\cf4 : TextView\
+    \cf2 private lateinit var \cf6 rankingAdapter\cf4 : RankingAdapter\
+    \cf2 private lateinit var \cf6 database\cf4 : DatabaseReference\
+\
+    \cf5 // 
+\f1 \uc0\u49324 \u50857 \u51088 \u51032  \u45769 \u45348 \u51076 \u51012  \u51200 \u51109 \u54624  \u48320 \u49688 \
+    
+\f0 \cf2 private var \cf6 myNickname\cf4 : String = \cf7 "UserNickname"  \cf5 // 
+\f1 \uc0\u51060  \u48512 \u48516 \u51012  \u49892 \u51228  \u49324 \u50857 \u51088 \u51032  \u45769 \u45348 \u51076 \u51004 \u47196  \u49444 \u51221 \u54616 \u49464 \u50836 \
+\
+    
+\f0 \cf2 override fun \cf8 onCreate\cf4 (savedInstanceState: Bundle?) \{\
+        \cf2 super\cf4 .onCreate(savedInstanceState)\
+        setContentView(R.layout.
+\f2\i \cf6 activity_ranking
+\f0\i0 \cf4 )\
+\
+        \cf6 rankingRecyclerView \cf4 = findViewById(R.id.
+\f2\i \cf6 rankingRecyclerView
+\f0\i0 \cf4 )\
+        \cf6 myRankingTextView \cf4 = findViewById(R.id.
+\f2\i \cf6 myRanking
+\f0\i0 \cf4 ) \cf5 //
+\f1 \uc0\u45236  \u54788 \u51116  \u47021 \u53433 \
+        
+\f0 \cf6 myNicknameTextView \cf4 = findViewById(R.id.
+\f2\i \cf6 myNickname
+\f0\i0 \cf4 ) \cf5 // 
+\f1 \uc0\u45236  \u45769 \u45364 \
+\
+        
+\f0 \cf6 database \cf4 = FirebaseDatabase.getInstance().
+\f2\i \cf6 reference
+\f0\i0 \cf4 .child(\cf7 "rankings"\cf4 )\
+\
+        \cf6 rankingRecyclerView\cf4 .
+\f2\i \cf6 layoutManager 
+\f0\i0 \cf4 = LinearLayoutManager(\cf2 this\cf4 )\
+        \cf6 rankingAdapter \cf4 = RankingAdapter(
+\f2\i emptyList
+\f0\i0 ())\
+        \cf6 rankingRecyclerView\cf4 .
+\f2\i \cf6 adapter 
+\f0\i0 \cf4 = \cf6 rankingAdapter\
+\
+        \cf4 fetchRankingData()\
+    \}\
+\
+    \cf5 // 
+\f1 \uc0\u51452 \u44036 
+\f0 , 
+\f1 \uc0\u50900 \u44036 
+\f0 , 
+\f1 \uc0\u50672 \u44036  \u47021 \u53433 \u48324 \u47196  \u49692 \u50948 \u47484  \u47196 \u46300 \
+    
+\f0 \cf2 private fun \cf8 loadRankings\cf4 (period: String) \{\
+        \cf2 val \cf4 rankingPath = \cf2 when \cf4 (period) \{\
+            \cf7 "weekly" \cf4 -> \cf7 "weekly"\
+            "monthly" \cf4 -> \cf7 "monthly"\
+            "yearly" \cf4 -> \cf7 "yearly"\
+            \cf2 else \cf4 -> \cf7 "weekly"\
+        \cf4 \}\
+\
+        \cf6 database\cf4 .child(rankingPath).orderByChild(\cf7 "rank"\cf4 ).addValueEventListener(\cf2 object \cf4 : ValueEventListener \{\
+            \cf2 override fun \cf8 onDataChange\cf4 (snapshot: DataSnapshot) \{\
+                \cf2 val \cf4 rankingList = 
+\f2\i mutableListOf
+\f0\i0 <RankingItem>()\
+                \cf2 for \cf4 (data \cf2 in \cf4 snapshot.
+\f2\i \cf6 children
+\f0\i0 \cf4 ) \{\
+                    \cf2 val \cf4 nickname = data.child(\cf7 "nickname"\cf4 ).getValue(String::\cf2 class\cf4 .
+\f2\i \cf6 java
+\f0\i0 \cf4 ) ?: \cf7 ""\
+                    \cf2 val \cf4 rank = data.child(\cf7 "rank"\cf4 ).getValue(Int::\cf2 class\cf4 .
+\f2\i \cf6 java
+\f0\i0 \cf4 ) ?: \cf9 0\
+                    \cf2 val \cf4 completionRate = data.child(\cf7 "completionRate"\cf4 ).getValue(Double::\cf2 class\cf4 .
+\f2\i \cf6 java
+\f0\i0 \cf4 ) ?: \cf9 0.0\
+\
+                    \cf2 val \cf4 rankingItem = RankingItem(\
+                        \cf10 nickname = \cf4 nickname\cf2 ,\
+                        \cf10 rank = \cf4 rank\cf2 ,\
+                        \cf10 completionRate = \cf4 completionRate\
+                    )\
+                \}\
+                \cf6 rankingAdapter\cf4 .updateData(rankingList)\
+                updateMyRanking(rankingList)  \cf5 // 
+\f1 \uc0\u45236  \u47021 \u53433  \u50629 \u45936 \u51060 \u53944 \
+            
+\f0 \cf4 \}\
+\
+            \cf2 override fun \cf8 onCancelled\cf4 (error: DatabaseError) \{\
+                Toast.makeText(\cf2 this\cf10 @RankingActivity\cf2 , \cf7 "Failed to load rankings"\cf2 , \cf4 Toast.
+\f2\i \cf6 LENGTH_SHORT
+\f0\i0 \cf4 ).show()\
+            \}\
+        \})\
+    \}\
+\
+    \cf5 // 
+\f1 \uc0\u49324 \u50857 \u51088 \u48324 \u47196  \u51089 \u50629  \u50756 \u47308 \u50984  \u44228 \u49328 \
+    
+\f0 \cf2 private fun \cf8 fetchRankingData\cf4 () \{\
+        \cf6 database\cf4 .addListenerForSingleValueEvent(\cf2 object \cf4 : ValueEventListener \{\
+            \cf2 override fun \cf8 onDataChange\cf4 (snapshot: DataSnapshot) \{\
+                \cf2 val \cf4 rankings = 
+\f2\i mutableListOf
+\f0\i0 <Pair<String\cf2 , \cf4 Double>>()\
+\
+                \cf2 for \cf4 (userSnapshot \cf2 in \cf4 snapshot.
+\f2\i \cf6 children
+\f0\i0 \cf4 ) \{\
+                    \cf2 val \cf4 userId = userSnapshot.
+\f2\i \cf6 key 
+\f0\i0 \cf4 ?: \cf2 continue\
+                    val \cf4 totalTasks = userSnapshot.child(\cf7 "User_Memo"\cf4 ).
+\f2\i \cf6 childrenCount\
+                    
+\f0\i0 \cf2 var \cf4 completedTasks = \cf9 0\
+\
+                    \cf2 for \cf4 (taskSnapshot \cf2 in \cf4 userSnapshot.child(\cf7 "User_Memo"\cf4 ).
+\f2\i \cf6 children
+\f0\i0 \cf4 ) \{\
+                        \cf2 val \cf4 task = taskSnapshot.getValue(DataModel::\cf2 class\cf4 .
+\f2\i \cf6 java
+\f0\i0 \cf4 )\
+                        \cf2 if \cf4 (task?.\cf6 isCompleted \cf4 == \cf2 true\cf4 ) \{\
+                            completedTasks++\
+                        \}\
+                    \}\
+\
+                    \cf2 val \cf4 completionRate = \cf2 if \cf4 (totalTasks > \cf9 0\cf4 ) \{\
+                        completedTasks.toDouble() / totalTasks.toDouble() * \cf9 100.0\
+                    \cf4 \} \cf2 else \cf4 \{\
+                        \cf9 0.0\
+                    \cf4 \}\
+\
+                    rankings.add(Pair(userId\cf2 , \cf4 completionRate))\
+                \}\
+\
+                \cf5 // 
+\f1 \uc0\u47021 \u53433  \u51221 \u47148  \u48143  \u54364 \u49884 \
+                
+\f0 \cf4 rankings.
+\f2\i \cf8 sortByDescending 
+\f3\i0\b \cf4 \{ it
+\f0\b0 .\cf6 second 
+\f3\b \cf4 \}\
+                
+\f0\b0 displayRankings(rankings)\
+            \}\
+\
+            \cf2 override fun \cf8 onCancelled\cf4 (error: DatabaseError) \{\
+                Toast.makeText(\cf2 this\cf10 @RankingActivity\cf2 , \cf7 "Failed to load rankings"\cf2 , \cf4 Toast.
+\f2\i \cf6 LENGTH_SHORT
+\f0\i0 \cf4 ).show()\
+            \}\
+        \})\
+    \}\
+\
+    \cf5 // 
+\f1 \uc0\u47021 \u53433 \u51012 
+\f0  UI
+\f1 \uc0\u50640  \u54364 \u49884 \u54616 \u44256 
+\f0 , 
+\f1 \uc0\u45236  \u47021 \u53433 \u51012  \u50629 \u45936 \u51060 \u53944 \
+    
+\f0 \cf2 private fun \cf8 displayRankings\cf4 (rankings: List<Pair<String\cf2 , \cf4 Double>>) \{\
+        \cf2 val \cf4 rankingList = rankings.
+\f2\i \cf8 mapIndexed 
+\f3\i0\b \cf4 \{ 
+\f0\b0 index\cf2 , \cf4 pair 
+\f3\b ->\
+            
+\f0\b0 RankingItem(\cf10 nickname = \cf4 pair.\cf6 first\cf2 , \cf10 rank = \cf4 index + \cf9 1\cf2 , \cf10 completionRate = \cf4 pair.\cf6 second\cf4 .toDouble())\
+        
+\f3\b \}\
+        
+\f0\b0 \cf6 rankingAdapter\cf4 .updateData(rankingList)\
+        updateMyRanking(rankingList)\
+    \}\
+\
+    \cf5 // 
+\f1 \uc0\u45236  \u47021 \u53433 \u51012  \u50629 \u45936 \u51060 \u53944 \u54616 \u45716  \u54632 \u49688 \
+    
+\f0 \cf2 private fun \cf8 updateMyRanking\cf4 (rankingList: List<RankingItem>) \{\
+        \cf2 val \cf4 myRanking = rankingList.
+\f2\i \cf8 indexOfFirst 
+\f3\i0\b \cf4 \{ it
+\f0\b0 .\cf6 nickname \cf4 == \cf6 myNickname 
+\f3\b \cf4 \} 
+\f0\b0 + \cf9 1\
+        \cf6 myRankingTextView\cf4 .
+\f2\i \cf6 text 
+\f0\i0 \cf4 = \cf7 "
+\f1 \uc0\u45236  \u47021 \u53433 
+\f0 : \cf2 $\{if \cf4 (myRanking > \cf9 0\cf4 ) myRanking \cf2 else \cf7 "
+\f1 \uc0\u49692 \u50948  \u50630 \u51020 
+\f0 "\cf2 \}\cf7 "\
+        \cf6 myNicknameTextView\cf4 .
+\f2\i \cf6 text 
+\f0\i0 \cf4 = \cf6 myNickname \cf5 // 
+\f1 \uc0\u49324 \u50857 \u51088  \u45769 \u45348 \u51076  \u54364 \u49884 \
+    
+\f0 \cf4 \}\
+\}\
+\
+\
+\
+MainActivity\
+\
+\cf2 package \cf4 com.byunggil.project_team5\
+\
+\cf2 import \cf4 android.annotation.\cf11 SuppressLint\
+\cf2 import \cf4 android.app.DatePickerDialog\
+\cf2 import \cf4 android.app.TimePickerDialog\
+\cf2 import \cf4 android.content.Intent\
+\cf2 import \cf4 android.os.Bundle\
+\cf2 import \cf4 android.util.Log\
+\cf2 import \cf4 android.view.LayoutInflater\
+\cf2 import \cf4 android.view.View\
+\cf2 import \cf4 android.widget.Button\
+\cf2 import \cf4 android.widget.DatePicker\
+\cf2 import \cf4 android.widget.EditText\
+\cf2 import \cf4 android.widget.ImageButton\
+\cf2 import \cf4 android.widget.Switch\
+\cf2 import \cf4 android.widget.TextView\
+\cf2 import \cf4 android.widget.TimePicker\
+\cf2 import \cf4 android.widget.Toast\
+\cf2 import \cf4 androidx.appcompat.app.AlertDialog\
+\cf2 import \cf4 androidx.appcompat.app.AppCompatActivity\
+\cf2 import \cf4 androidx.compose.material3.DatePickerDialog\
+\cf2 import \cf4 androidx.lifecycle.ReportFragment.Companion.
+\f2\i \cf6 reportFragment\
+
+\f0\i0 \cf2 import \cf4 androidx.recyclerview.widget.LinearLayoutManager\
+\cf2 import \cf4 androidx.recyclerview.widget.RecyclerView\
+\cf2 import \cf4 com.google.android.material.floatingactionbutton.FloatingActionButton\
+\cf2 import \cf4 com.google.firebase.Firebase\
+\cf2 import \cf4 com.google.firebase.auth.auth\
+\cf2 import \cf4 com.google.firebase.database.DataSnapshot\
+\cf2 import \cf4 com.google.firebase.database.DatabaseError\
+\cf2 import \cf4 com.google.firebase.database.ValueEventListener\
+\cf2 import \cf4 com.google.firebase.database.database\
+\cf2 import \cf4 java.util.Calendar\
+\cf2 import \cf4 java.util.TimeZone\
+\
+\cf2 class \cf4 MainActivity : AppCompatActivity() \{\
+\
+    \cf2 private val \cf6 database \cf4 = Firebase.
+\f2\i \cf6 database\
+\
+    
+\f0\i0 \cf5 // FirebaseDatabase 
+\f1 \uc0\u53364 \u47000 \u49828 \u51032  \u44061 \u52404 
+\f0  database 
+\f1 \uc0\u49373 \u49457 \
+    
+\f0 \cf2 private var \cf6 myRef \cf4 = \cf6 database\cf4 .getReference(\cf7 "User"\cf4 ).child(Firebase.
+\f2\i \cf6 auth
+\f0\i0 \cf4 .
+\f2\i \cf6 currentUser
+\f0\i0 \cf4 !!.
+\f2\i \cf6 uid
+\f0\i0 \cf4 )\
+    \cf5 // Firebase Realtime Database 
+\f1 \uc0\u49436 \u48260 \u50640  \u51200 \u51109 \u46108  \u44221 \u47196  \u51473 
+\f0 , User/UID
+\f1 \uc0\u47484  \u52280 \u51312 \u54616 \u45716  \u48320 \u49688  \u49373 \u49457 \
+    
+\f0 // 
+\f1 \uc0\u47564 \u50557 
+\f0 , 
+\f1 \uc0\u50500 \u51649  \u44536  \u44221 \u47196 \u44032  \u51316 \u51116 \u54616 \u51648  \u50506 \u45716 \u45796 \u47732 
+\f0 , myRef
+\f1 \uc0\u47196  \u45936 \u51060 \u53552  \u51200 \u51109  \u49884 
+\f0 , User/UID 
+\f1 \uc0\u46972 \u45716  \u46356 \u47113 \u53664 \u47532  \u49373 \u49457  \u54980 
+\f0 ,\
+    // 
+\f1 \uc0\u44536  \u48145 \u51004 \u47196  \u45936 \u51060 \u53552 \u47484  \u51200 \u51109 \
+\
+    
+\f0 // 
+\f1 \uc0\u49892 \u51228  \u49884 \u44036 \u51012  \u44288 \u47532 \u54616 \u45716 
+\f0  Calender 
+\f1 \uc0\u53364 \u47000 \u49828 \u47196 \u48512 \u53552  \u54788 \u51116  \u49884 \u44033 \u51012  \u48155 \u50500  \u50740 \
+    
+\f0 \cf2 private val \cf6 calendar \cf4 = Calendar.getInstance(TimeZone.getTimeZone(\cf7 "Asia/Seoul"\cf4 ))\
+    \cf2 private var \cf6 year \cf4 = \cf6 calendar\cf4 .get(Calendar.
+\f2\i \cf6 YEAR
+\f0\i0 \cf4 )\
+    \cf2 private var \cf6 month \cf4 = \cf6 calendar\cf4 .get(Calendar.
+\f2\i \cf6 MONTH
+\f0\i0 \cf4 ) + \cf9 1 \cf5 // Month 
+\f1 \uc0\u44050 \u51008 
+\f0  0
+\f1 \uc0\u48512 \u53552  \u49884 \u51089 \
+    
+\f0 \cf2 private var \cf6 date \cf4 = \cf6 calendar\cf4 .get(Calendar.
+\f2\i \cf6 DATE
+\f0\i0 \cf4 )\
+    \cf2 private var \cf6 hour \cf4 = \cf6 calendar\cf4 .get(Calendar.
+\f2\i \cf6 HOUR
+\f0\i0 \cf4 )\
+    \cf2 private var \cf6 minute \cf4 = \cf6 calendar\cf4 .get(Calendar.
+\f2\i \cf6 MINUTE
+\f0\i0 \cf4 )\
+\
+    \cf5 // topAppBar
+\f1 \uc0\u50640  \u45216 \u51676 \u47484  \u54364 \u49884 \u54616 \u44592  \u50948 \u54620  \u48320 \u49688  \u49444 \u51221 \
+    
+\f0 \cf2 private val \cf6 todayYear \cf4 = \cf6 year\
+    \cf2 private val \cf6 todayMonth \cf4 = \cf6 month\
+    \cf2 private val \cf6 todayDate \cf4 = \cf6 date\
+\
+    \cf5 // 
+\f1 \uc0\u51064 \u51613  \u47784 \u46300  \u49444 \u51221 \
+    
+\f0 \cf2 private var \cf6 modeStatus \cf4 = \cf2 false\
+\
+    \cf5 // 
+\f1 \uc0\u49324 \u50857 \u51088 \u44032  \u50545  \u49892 \u54665  \u49884 
+\f0 , onCreate 
+\f1 \uc0\u54632 \u49688  \u54840 \u52636 \
+    
+\f0 \cf11 @SuppressLint\cf4 (\cf7 "SetTextI18n"\cf4 )\
+    \cf2 override fun \cf8 onCreate\cf4 (savedInstanceState: Bundle?) \{\
+\
+        \cf2 super\cf4 .onCreate(savedInstanceState)\
+        setContentView(R.layout.
+\f2\i \cf6 activity_main
+\f0\i0 \cf4 )\
+\
+        \cf2 val \cf4 rv = findViewById<RecyclerView>(R.id.
+\f2\i \cf6 recyclerView
+\f0\i0 \cf4 )\
+        \cf5 // MainActivity
+\f1 \uc0\u51032 
+\f0  RecyclerView
+\f1 \uc0\u47484 
+\f0  rv
+\f1 \uc0\u47196  \u52280 \u51312 \
+        
+\f0 \cf2 val \cf4 items = 
+\f2\i mutableListOf
+\f0\i0 <DataModel>()\
+        \cf2 val \cf4 rvAdapter = RvAdapter(items)\
+        \cf5 // 
+\f1 \uc0\u47564 \u46308 \u50612 \u46164 
+\f0  RvAdapter 
+\f1 \uc0\u53364 \u47000 \u49828  \u44061 \u52404  \u49373 \u49457 \
+\
+        
+\f0 \cf4 rv.
+\f2\i \cf6 adapter 
+\f0\i0 \cf4 = rvAdapter\
+        \cf5 // rv(MainActivity
+\f1 \uc0\u51032 
+\f0  RecyclerView)
+\f1 \uc0\u51032 
+\f0  Adapter
+\f1 \uc0\u50640  \u49373 \u49457 \u54620 
+\f0  rvAdapter(RvAdapter 
+\f1 \uc0\u53364 \u47000 \u49828  \u44061 \u52404 
+\f0 )
+\f1 \uc0\u47484  \u50672 \u44208 \
+        
+\f0 \cf4 rv.
+\f2\i \cf6 layoutManager 
+\f0\i0 \cf4 = LinearLayoutManager(\cf2 this\cf4 )\
+        \cf5 // rv
+\f1 \uc0\u51032 
+\f0  layoutManager
+\f1 \uc0\u47484 
+\f0  LinearLayoutManager
+\f1 \uc0\u47196  \u49444 \u51221 \
+        
+\f0 \cf4 rvAdapter.\cf6 itemClick \cf4 = \cf2 object \cf4 : RvAdapter.ItemClick \{\
+            \cf2 override fun \cf8 onClick\cf4 (view: View\cf2 , \cf4 position: Int) \{\
+                Toast.makeText(
+\f2\i \cf6 baseContext
+\f0\i0 \cf2 , \cf4 items[position].\cf6 toDoList\cf2 , \cf4 Toast.
+\f2\i \cf6 LENGTH_LONG
+\f0\i0 \cf4 ).show()\
+            \} \cf5 // ItemView 
+\f1 \uc0\u53364 \u47533  \u49884 
+\f0 , 
+\f1 \uc0\u44396 \u54788 \u54624  \u46041 \u51089  \u51221 \u51032 \
+        
+\f0 \cf4 \} \cf5 // 
+\f1 \uc0\u51060 \u47196 \u50024 
+\f0  rv
+\f1 \uc0\u51032 
+\f0  Adapter
+\f1 \uc0\u45716 
+\f0  RecyclerView
+\f1 \uc0\u50640  \u53364 \u47533  \u48156 \u49373  \u49884 
+\f0 , 
+\f1 \uc0\u47749 \u54869 \u54620  \u46041 \u51089  \u44396 \u54788 \
+\
+        
+\f0 // 
+\f1 \uc0\u50545  \u49892 \u54665  \u49884 
+\f0 , 
+\f1 \uc0\u45936 \u51060 \u53552 \u47484  \u48520 \u47084  \u50740 \
+        
+\f0 \cf6 myRef\cf4 .child(\cf7 "User_Memo/\cf2 $\{\cf6 year\cf2 \}\cf7 -\cf2 $\{\cf6 month\cf2 \}\cf7 -\cf2 $\{\cf6 date\cf2 \}\cf7 "\cf4 )\
+            .addListenerForSingleValueEvent(\cf2 object \cf4 : ValueEventListener \{\
+\
+                \cf11 @SuppressLint\cf4 (\cf7 "NotifyDataSetChanged"\cf4 )\
+                \cf2 override fun \cf8 onDataChange\cf4 (snapshot: DataSnapshot) \{\
+                    items.clear()\
+                    \cf2 for \cf4 (data \cf2 in \cf4 snapshot.
+\f2\i \cf6 children
+\f0\i0 \cf4 ) \{\
+                        items.add(data.getValue(DataModel::\cf2 class\cf4 .
+\f2\i \cf6 java
+\f0\i0 \cf4 )!!)\
+                    \}\
+                    rvAdapter.notifyDataSetChanged()\
+                \}\
+\
+                \cf2 override fun \cf8 onCancelled\cf4 (error: DatabaseError) \{\
+                    
+\f2\i TODO
+\f0\i0 ()\
+                \}\
+            \})\
+\
+        \cf5 // topAppbar
+\f1 \uc0\u50640  \u45216 \u51676  \u54364 \u49884  \u48143  \u45216 \u51676  \u49440 \u53469  \u44592 \u45733  \u44396 \u54788 \
+        
+\f0 \cf2 val \cf4 date_indicator = findViewById<Button>(R.id.
+\f2\i \cf6 date_indicator
+\f0\i0 \cf4 )\
+        \cf2 if \cf4 (\cf6 todayYear \cf4 == \cf6 year \cf4 && \cf6 todayMonth \cf4 == \cf6 month \cf4 && \cf6 todayDate \cf4 == \cf6 date\cf4 ) \{\
+            date_indicator.
+\f2\i \cf6 text 
+\f0\i0 \cf4 = \cf7 "Today"\
+        \cf4 \} \cf2 else \cf4 \{\
+            date_indicator.
+\f2\i \cf6 text 
+\f0\i0 \cf4 = \cf7 "\cf2 $\{\cf6 year\cf2 \}\cf7 -\cf2 $\{\cf6 month\cf2 \}\cf7 -\cf2 $\{\cf6 date\cf2 \}\cf7 "\
+        \cf4 \}\
+        date_indicator.setOnClickListener 
+\f3\b \{\
+            
+\f0\b0 \cf2 val \cf4 datePickerDialog =\
+                DatePickerDialog(\cf2 this, object \cf4 : DatePickerDialog.OnDateSetListener \{\
+                    \cf2 override fun \cf8 onDateSet\cf4 (p0: DatePicker?\cf2 , \cf4 t1: Int\cf2 , \cf4 t2: Int\cf2 , \cf4 t3: Int) \{\
+                        \cf6 year \cf4 = t1\
+                        \cf6 month \cf4 = t2\
+                        \cf6 date \cf4 = t3\
+                        \cf2 if \cf4 (\cf6 todayYear \cf4 == \cf6 year \cf4 && \cf6 todayMonth \cf4 == \cf6 month \cf4 && \cf6 todayDate \cf4 == \cf6 date\cf4 ) \{\
+                            date_indicator.
+\f2\i \cf6 text 
+\f0\i0 \cf4 = \cf7 "Today"\
+                        \cf4 \} \cf2 else \cf4 \{\
+                            date_indicator.
+\f2\i \cf6 text 
+\f0\i0 \cf4 = \cf7 "\cf2 $\{\cf6 year\cf2 \}\cf7 -\cf2 $\{\cf6 month\cf2 \}\cf7 -\cf2 $\{\cf6 date\cf2 \}\cf7 "\
+                        \cf4 \}\
+                        \cf6 myRef\cf4 .child(\cf7 "User_Memo/\cf2 $\{\cf6 year\cf2 \}\cf7 -\cf2 $\{\cf6 month\cf2 \}\cf7 -\cf2 $\{\cf6 date\cf2 \}\cf7 "\cf4 )\
+                            .addListenerForSingleValueEvent(\cf2 object \cf4 : ValueEventListener \{\
+\
+                                \cf11 @SuppressLint\cf4 (\cf7 "NotifyDataSetChanged"\cf4 )\
+                                \cf2 override fun \cf8 onDataChange\cf4 (snapshot: DataSnapshot) \{\
+                                    items.clear()\
+                                    \cf2 for \cf4 (data \cf2 in \cf4 snapshot.
+\f2\i \cf6 children
+\f0\i0 \cf4 ) \{\
+                                        items.add(data.getValue(DataModel::\cf2 class\cf4 .
+\f2\i \cf6 java
+\f0\i0 \cf4 )!!)\
+                                    \}\
+                                    rvAdapter.notifyDataSetChanged()\
+                                \}\
+\
+                                \cf2 override fun \cf8 onCancelled\cf4 (error: DatabaseError) \{\
+                                    
+\f2\i TODO
+\f0\i0 ()\
+                                \}\
+                            \})\
+                    \}\
+                \}\cf2 , \cf6 year\cf2 , \cf6 month\cf2 , \cf6 date\cf4 )\
+            datePickerDialog.show()\
+        
+\f3\b \}\
+\
+        
+\f0\b0 \cf5 // BottomAppBar
+\f1 \uc0\u51032 
+\f0  FAB 
+\f1 \uc0\u46041 \u51089  \u49444 \u51221 \
+        
+\f0 \cf2 val \cf4 add_Btn = findViewById<FloatingActionButton>(R.id.
+\f2\i \cf6 add_Btn
+\f0\i0 \cf4 )\
+        add_Btn.setOnClickListener 
+\f3\b \{\
+            
+\f0\b0 \cf2 val \cf4 dialogView = LayoutInflater.from(\cf2 this\cf4 ).inflate(R.layout.
+\f2\i \cf6 custom_dialog
+\f0\i0 \cf2 , null\cf4 )\
+            \cf2 val \cf4 builder = AlertDialog.Builder(\cf2 this\cf4 ).setView(dialogView)\
+            \cf2 val \cf4 dialog = builder.create()\
+\
+            dialog.
+\f2\i \cf6 window
+\f0\i0 \cf4 ?.setBackgroundDrawableResource(android.R.color.
+\f2\i \cf6 transparent
+\f0\i0 \cf4 )\
+            dialog.show()\
+\
+            \cf2 var \cf4 startYear = \cf9 0\
+            \cf2 var \cf4 startMonth = \cf9 0\
+            \cf2 var \cf4 startDate = \cf9 0\
+            \cf2 var \cf4 endYear = \cf9 0\
+            \cf2 var \cf4 endMonth = \cf9 0\
+            \cf2 var \cf4 endDate = \cf9 0\
+            \cf2 var \cf4 startHour = \cf9 0\
+            \cf2 var \cf4 startMinute = \cf9 0\
+            \cf2 var \cf4 endHour = \cf9 0\
+            \cf2 var \cf4 endMinute = \cf9 0\
+\
+            \cf5 // 
+\f1 \uc0\u44592 \u44036  \u49444 \u51221 \
+            
+\f0 \cf2 val \cf4 setPeriod = dialogView.findViewById<TextView>(R.id.
+\f2\i \cf6 period
+\f0\i0 \cf4 )\
+            setPeriod.setOnClickListener 
+\f3\b \{\
+                
+\f0\b0 \cf2 val \cf4 periodSetDialogView =\
+                    LayoutInflater.from(\cf2 this\cf4 ).inflate(R.layout.
+\f2\i \cf6 set_period_dialog
+\f0\i0 \cf2 , null\cf4 )\
+                \cf5 // set_period_dialog.xml 
+\f1 \uc0\u54028 \u51068 \u51012  \u48624 \u47196  \u48320 \u54872 \u54616 \u50668  \u48320 \u49688 
+\f0  periodSetDialogView
+\f1 \uc0\u47196  \u51200 \u51109 \
+                
+\f0 \cf2 val \cf4 builder2 = AlertDialog.Builder(\cf2 this\cf4 ).setView(periodSetDialogView)\
+                \cf5 // periodSetDialogView
+\f1 \uc0\u47484  \u44592 \u48152 \u51004 \u47196 
+\f0  AlertDialog
+\f1 \uc0\u47484  \u44396 \u49457 \u54616 \u45716  \u45936  \u49324 \u50857 \u54624 
+\f0  Builder 
+\f1 \uc0\u44061 \u52404  \u49373 \u49457 \
+                
+\f0 \cf2 val \cf4 periodSetDialog = builder2.create()\
+                \cf5 //  
+\f1 \uc0\u52572 \u51333 \u51201 \u51004 \u47196  \u49373 \u49457 \u46108 
+\f0  AlertDialog 
+\f1 \uc0\u44061 \u52404 \
+\
+                
+\f0 \cf4 periodSetDialog.
+\f2\i \cf6 window
+\f0\i0 \cf4 ?.setBackgroundDrawableResource(android.R.color.
+\f2\i \cf6 transparent
+\f0\i0 \cf4 )\
+                periodSetDialog.show()\
+\
+                \cf5 // 
+\f1 \uc0\u49884 \u51089 \u51068  \u49444 \u51221 \
+                
+\f0 \cf2 val \cf4 setStartDate = periodSetDialogView.findViewById<TextView>(R.id.
+\f2\i \cf6 start_date
+\f0\i0 \cf4 )\
+                setStartDate.
+\f2\i \cf6 text 
+\f0\i0 \cf4 = \cf7 "\cf2 $\{\cf6 year\cf2 \}\cf7 -\cf2 $\{\cf6 month\cf2 \}\cf7 -\cf2 $\{\cf6 date\cf2 \}\cf7 "\
+                \cf4 setStartDate.setOnClickListener 
+\f3\b \{\
+                    
+\f0\b0 \cf2 val \cf4 datePickerDialog =\
+                        DatePickerDialog(\cf2 this, object \cf4 : DatePickerDialog.OnDateSetListener \{\
+                            \cf2 override fun \cf8 onDateSet\cf4 (p0: DatePicker?\cf2 , \cf4 t1: Int\cf2 , \cf4 t2: Int\cf2 , \cf4 t3: Int) \{\
+                                startYear = t1\
+                                startMonth = t2\
+                                startDate = t3\
+                                setStartDate.
+\f2\i \cf6 text 
+\f0\i0 \cf4 = \cf7 "\cf2 $\{\cf4 startYear\cf2 \}\cf7 -\cf2 $\{\cf4 startMonth\cf2 \}\cf7 -\cf2 $\{\cf4 startDate\cf2 \}\cf7 "\
+                            \cf4 \}\
+                        \}\cf2 , \cf6 year\cf2 , \cf6 month\cf2 , \cf6 date\cf4 )\
+                    datePickerDialog.show()\
+                
+\f3\b \}\
+\
+                
+\f0\b0 \cf5 // 
+\f1 \uc0\u51333 \u47308 \u51068  \u49444 \u51221 \
+                
+\f0 \cf2 val \cf4 setEndDate = periodSetDialogView.findViewById<TextView>(R.id.
+\f2\i \cf6 end_date
+\f0\i0 \cf4 )\
+                setEndDate.
+\f2\i \cf6 text 
+\f0\i0 \cf4 = \cf7 "\cf2 $\{\cf6 year\cf2 \}\cf7 -\cf2 $\{\cf6 month\cf2 \}\cf7 -\cf2 $\{\cf6 date\cf2 \}\cf7 "\
+                \cf4 setEndDate.setOnClickListener 
+\f3\b \{\
+                    
+\f0\b0 \cf2 val \cf4 datePickerDialog =\
+                        DatePickerDialog(\cf2 this, object \cf4 : DatePickerDialog.OnDateSetListener \{\
+                            \cf2 override fun \cf8 onDateSet\cf4 (p0: DatePicker?\cf2 , \cf4 t1: Int\cf2 , \cf4 t2: Int\cf2 , \cf4 t3: Int) \{\
+                                endYear = t1\
+                                endMonth = t2\
+                                endDate = t3\
+                                setEndDate.
+\f2\i \cf6 text 
+\f0\i0 \cf4 = \cf7 "\cf2 $\{\cf4 endYear\cf2 \}\cf7 -\cf2 $\{\cf4 endMonth\cf2 \}\cf7 -\cf2 $\{\cf4 endDate\cf2 \}\cf7 "\
+                            \cf4 \}\
+                        \}\cf2 , \cf6 year\cf2 , \cf6 month\cf2 , \cf6 date\cf4 )\
+                    datePickerDialog.show()\
+                
+\f3\b \}\
+\
+                
+\f0\b0 \cf5 // 
+\f1 \uc0\u51200 \u51109  \u48260 \u53948  \u49444 \u51221 \
+                
+\f0 \cf2 val \cf4 savePeriod_Btn =\
+                    periodSetDialog.findViewById<ImageButton>(R.id.
+\f2\i \cf6 savePeriod_Btn
+\f0\i0 \cf4 )\
+                savePeriod_Btn?.setOnClickListener 
+\f3\b \{\
+                    
+\f0\b0 \cf2 if \cf4 (startYear == \cf9 0 \cf4 || startMonth == \cf9 0 \cf4 || startDate == \cf9 0\cf4 ) \{\
+                        startYear = \cf6 year\
+                        \cf4 startMonth = \cf6 month\
+                        \cf4 startDate = \cf6 date\
+                    \cf4 \}\
+                    \cf2 if \cf4 (endYear == \cf9 0 \cf4 || endMonth == \cf9 0 \cf4 || endDate == \cf9 0\cf4 ) \{\
+                        endYear = \cf6 year\
+                        \cf4 endMonth = \cf6 month\
+                        \cf4 endDate = \cf6 date\
+                    \cf4 \}\
+                    setPeriod.
+\f2\i \cf6 text 
+\f0\i0 \cf4 =\
+                        \cf7 "\cf2 $\{\cf4 startYear\cf2 \}\cf7 -\cf2 $\{\cf4 startMonth\cf2 \}\cf7 -\cf2 $\{\cf4 startDate\cf2 \}\cf7  ~ \cf2 $\{\cf4 endYear\cf2 \}\cf7 -\cf2 $\{\cf4 endMonth\cf2 \}\cf7 -\cf2 $\{\cf4 endDate\cf2 \}\cf7 "\
+                    \cf4 periodSetDialog.dismiss()\
+                
+\f3\b \}\
+            \}\
+            
+\f0\b0 \cf5 // 
+\f1 \uc0\u49884 \u51089  \u49884 \u44036  \u49444 \u51221 \
+            
+\f0 \cf2 val \cf4 setStartTime_Btn = dialogView.findViewById<ImageButton>(R.id.
+\f2\i \cf6 setStartTime_Btn
+\f0\i0 \cf4 )\
+            setStartTime_Btn.setOnClickListener 
+\f3\b \{\
+                
+\f0\b0 \cf6 hour \cf4 = \cf6 calendar\cf4 .get(Calendar.
+\f2\i \cf6 HOUR
+\f0\i0 \cf4 )\
+                \cf6 minute \cf4 = \cf6 calendar\cf4 .get(Calendar.
+\f2\i \cf6 MINUTE
+\f0\i0 \cf4 )\
+\
+                \cf2 val \cf4 timePickerListener = \cf2 object \cf4 : TimePickerDialog.OnTimeSetListener \{\
+                    \cf2 override fun \cf8 onTimeSet\cf4 (p: TimePicker?\cf2 , \cf4 t1: Int\cf2 , \cf4 t2: Int) \{\
+                        \cf2 val \cf4 start_time = dialogView.findViewById<TextView>(R.id.
+\f2\i \cf6 start_Time
+\f0\i0 \cf4 )\
+                        start_time.setText(\cf7 "\cf2 $\{\cf4 t1\cf2 \}
+\f1 \cf7 \uc0\u49884  
+\f0 \cf2 $\{\cf4 t2\cf2 \}
+\f1 \cf7 \uc0\u48516 
+\f0 "\cf4 )\
+                        startHour = t1\
+                        startMinute = t2\
+                    \}\
+                \}\
+\
+                \cf2 val \cf4 timePickerDialog = TimePickerDialog(\
+                    \cf2 this\cf10 @MainActivity\cf2 , \cf4 timePickerListener\cf2 ,\
+                    \cf6 hour\cf2 , \cf6 minute\cf2 , false\
+                \cf4 )\
+                timePickerDialog.show()\
+            
+\f3\b \}\
+\
+            
+\f0\b0 \cf5 // 
+\f1 \uc0\u51333 \u47308  \u49884 \u44036  \u49444 \u51221 \
+            
+\f0 \cf2 val \cf4 setEndTime_Btn = dialogView.findViewById<ImageButton>(R.id.
+\f2\i \cf6 setEndTime_Btn
+\f0\i0 \cf4 )\
+            setEndTime_Btn.setOnClickListener 
+\f3\b \{\
+                
+\f0\b0 \cf6 hour \cf4 = \cf6 calendar\cf4 .get(Calendar.
+\f2\i \cf6 HOUR
+\f0\i0 \cf4 )\
+                \cf6 minute \cf4 = \cf6 calendar\cf4 .get(Calendar.
+\f2\i \cf6 MINUTE
+\f0\i0 \cf4 )\
+\
+                \cf2 val \cf4 timePickerListener = \cf2 object \cf4 : TimePickerDialog.OnTimeSetListener \{\
+                    \cf2 override fun \cf8 onTimeSet\cf4 (p: TimePicker?\cf2 , \cf4 t1: Int\cf2 , \cf4 t2: Int) \{\
+                        \cf2 val \cf4 end_Time = dialogView.findViewById<TextView>(R.id.
+\f2\i \cf6 end_Time
+\f0\i0 \cf4 )\
+                        end_Time.setText(\cf7 "\cf2 $\{\cf4 t1\cf2 \}
+\f1 \cf7 \uc0\u49884  
+\f0 \cf2 $\{\cf4 t2\cf2 \}
+\f1 \cf7 \uc0\u48516 
+\f0 "\cf4 )\
+                        endHour = t1\
+                        endMinute = t2\
+                    \}\
+                \}\
+\
+                \cf2 val \cf4 timePickerDialog = TimePickerDialog(\
+                    \cf2 this\cf10 @MainActivity\cf2 , \cf4 timePickerListener\cf2 ,\
+                    \cf6 hour\cf2 , \cf6 minute\cf2 , false\
+                \cf4 )\
+                timePickerDialog.show()\
+            
+\f3\b \}\
+\
+            
+\f0\b0 \cf5 // 
+\f1 \uc0\u53664 \u44544  \u48260 \u53948  \u49444 \u51221 \
+            
+\f0 \cf2 val \cf4 switch_Btn = dialogView.findViewById<Switch>(R.id.
+\f2\i \cf6 switch_Btn
+\f0\i0 \cf4 )\
+            switch_Btn.setOnCheckedChangeListener 
+\f3\b \{ 
+\f0\b0 buttonView\cf2 , \cf4 isChecked 
+\f3\b ->\
+                
+\f0\b0 \cf2 if \cf4 (isChecked) \{\
+                    \cf5 // ON 
+\f1 \uc0\u49345 \u53468 \
+                    
+\f0 \cf6 modeStatus \cf4 = \cf2 true\
+                    \cf4 Toast.makeText(\cf2 this, \cf7 "Switched ON"\cf2 , \cf4 Toast.
+\f2\i \cf6 LENGTH_SHORT
+\f0\i0 \cf4 ).show()\
+                \} \cf2 else \cf4 \{\
+                    \cf5 // OFF 
+\f1 \uc0\u49345 \u53468 \
+                    
+\f0 \cf6 modeStatus \cf4 = \cf2 false\
+                    \cf4 Toast.makeText(\cf2 this, \cf7 "Switched OFF"\cf2 , \cf4 Toast.
+\f2\i \cf6 LENGTH_SHORT
+\f0\i0 \cf4 ).show()\
+                \}\
+            
+\f3\b \}\
+\
+            
+\f0\b0 \cf5 // 
+\f1 \uc0\u51200 \u51109  \u48260 \u53948  \u49444 \u51221 \
+            
+\f0 \cf2 val \cf4 saveList_Btn = dialogView.findViewById<ImageButton>(R.id.
+\f2\i \cf6 saveList_Btn
+\f0\i0 \cf4 )\
+            saveList_Btn.setOnClickListener 
+\f3\b \{\
+                
+\f0\b0 \cf2 val \cf4 To_Do_list =\
+                    dialogView.findViewById<EditText>(R.id.
+\f2\i \cf6 To_Do_List
+\f0\i0 \cf4 ).
+\f2\i \cf6 text
+\f0\i0 \cf4 .toString()\
+                \cf2 if \cf4 (startYear == \cf9 0 \cf4 || startMonth == \cf9 0 \cf4 || startDate == \cf9 0\cf4 ) \{\
+                    startYear = \cf6 year\
+                    \cf4 startMonth = \cf6 month\
+                    \cf4 startDate = \cf6 date\
+                \cf4 \}\
+                \cf2 if \cf4 (endYear == \cf9 0 \cf4 || endMonth == \cf9 0 \cf4 || endDate == \cf9 0\cf4 ) \{\
+                    endYear = \cf6 year\
+                    \cf4 endMonth = \cf6 month\
+                    \cf4 endDate = \cf6 date\
+                \cf4 \}\
+                \cf2 val \cf4 dataModel = DataModel(\
+                    To_Do_list\cf2 , \cf4 startYear\cf2 , \cf4 startMonth\cf2 , \cf4 startDate\cf2 ,\
+                    \cf4 endYear\cf2 , \cf4 endMonth\cf2 , \cf4 endDate\cf2 ,\
+                    \cf4 startHour\cf2 , \cf4 startMinute\cf2 , \cf4 endHour\cf2 , \cf4 endMinute\cf2 , \cf6 modeStatus\
+                \cf4 )\
+\
+                \cf2 val \cf4 startCalendar = Calendar.getInstance()\
+                startCalendar.set(startYear\cf2 , \cf4 startMonth - \cf9 1\cf2 , \cf4 startDate)\
+                \cf2 val \cf4 endCalendar = Calendar.getInstance()\
+                endCalendar.set(endYear\cf2 , \cf4 endMonth - \cf9 1\cf2 , \cf4 endDate)\
+\
+                \cf5 // 
+\f1 \uc0\u47784 \u46304  \u45216 \u51676 \u47484  \u47532 \u49828 \u53944 \u50640  \u52628 \u44032 \
+                
+\f0 \cf2 val \cf4 datesToCheck = 
+\f2\i mutableListOf
+\f0\i0 <Calendar>()\
+                \cf2 while \cf4 (!startCalendar.after(endCalendar)) \{\
+                    datesToCheck.add(startCalendar.clone() \cf2 as \cf4 Calendar)\
+                    startCalendar.add(Calendar.
+\f2\i \cf6 DATE
+\f0\i0 \cf2 , \cf9 1\cf4 )\
+                \}\
+\
+                checkDatesForDuplicates(datesToCheck\cf2 , \cf4 dataModel\cf2 , \cf4 To_Do_list)\
+\
+                dialog.dismiss() \cf5 // 
+\f1 \uc0\u45796 \u51060 \u50620 \u47196 \u44536  \u45803 \u44592 \
+\
+                
+\f0 // 
+\f1 \uc0\u49352 \u47196 \u50868  \u54637 \u47785  \u52628 \u44032  \u49884 
+\f0 , 
+\f1 \uc0\u51088 \u46041  \u49892 \u54665 \u46104 \u45716  \u48512 \u48516 \
+                
+\f0 \cf6 myRef\cf4 .child(\cf7 "User_Memo/\cf2 $\{\cf6 year\cf2 \}\cf7 -\cf2 $\{\cf6 month\cf2 \}\cf7 -\cf2 $\{\cf6 date\cf2 \}\cf7 "\cf4 )\
+                    .addValueEventListener(\cf2 object \cf4 : ValueEventListener \{\
+\
+                        \cf11 @SuppressLint\cf4 (\cf7 "NotifyDataSetChanged"\cf4 )\
+                        \cf2 override fun \cf8 onDataChange\cf4 (snapshot: DataSnapshot) \{\
+                            items.clear()\
+                            \cf2 for \cf4 (data \cf2 in \cf4 snapshot.
+\f2\i \cf6 children
+\f0\i0 \cf4 ) \{\
+                                items.add(data.getValue(DataModel::\cf2 class\cf4 .
+\f2\i \cf6 java
+\f0\i0 \cf4 )!!)\
+                            \}\
+                            rvAdapter.notifyDataSetChanged()\
+                        \}\
+\
+                        \cf2 override fun \cf8 onCancelled\cf4 (error: DatabaseError) \{\
+                            
+\f2\i TODO
+\f0\i0 ()\
+                        \}\
+\
+                    \})\
+            
+\f3\b \}\
+        \}\
+\
+        
+\f0\b0 \cf5 // topAppbar
+\f1 \uc0\u51032  \u50812 \u51901  \u48260 \u53948  \u46041 \u51089  \u44396 \u54788 \
+        
+\f0 \cf2 val \cf4 previousDay_Btn = findViewById<ImageButton>(R.id.
+\f2\i \cf6 previousDay_Btn
+\f0\i0 \cf4 )\
+        previousDay_Btn.setOnClickListener 
+\f3\b \{\
+            
+\f0\b0 \cf6 calendar\cf4 .add(Calendar.
+\f2\i \cf6 DATE
+\f0\i0 \cf2 , \cf4 -\cf9 1\cf4 )\
+            \cf6 year \cf4 = \cf6 calendar\cf4 .get(Calendar.
+\f2\i \cf6 YEAR
+\f0\i0 \cf4 )\
+            \cf6 month \cf4 = \cf6 calendar\cf4 .get(Calendar.
+\f2\i \cf6 MONTH
+\f0\i0 \cf4 ) + \cf9 1\
+            \cf6 date \cf4 = \cf6 calendar\cf4 .get(Calendar.
+\f2\i \cf6 DATE
+\f0\i0 \cf4 )\
+\
+            \cf2 if \cf4 (\cf6 todayYear \cf4 == \cf6 year \cf4 && \cf6 todayMonth \cf4 == \cf6 month \cf4 && \cf6 todayDate \cf4 == \cf6 date\cf4 ) \{\
+                date_indicator.
+\f2\i \cf6 text 
+\f0\i0 \cf4 = \cf7 "Today"\
+            \cf4 \} \cf2 else \cf4 \{\
+                date_indicator.
+\f2\i \cf6 text 
+\f0\i0 \cf4 = \cf7 "\cf2 $\{\cf6 year\cf2 \}\cf7 -\cf2 $\{\cf6 month\cf2 \}\cf7 -\cf2 $\{\cf6 date\cf2 \}\cf7 "\
+            \cf4 \}\
+\
+            \cf6 myRef\cf4 .child(\cf7 "User_Memo/\cf2 $\{\cf6 year\cf2 \}\cf7 -\cf2 $\{\cf6 month\cf2 \}\cf7 -\cf2 $\{\cf6 date\cf2 \}\cf7 "\cf4 )\
+                .addListenerForSingleValueEvent(\cf2 object \cf4 : ValueEventListener \{\
+\
+                    \cf11 @SuppressLint\cf4 (\cf7 "NotifyDataSetChanged"\cf4 )\
+                    \cf2 override fun \cf8 onDataChange\cf4 (snapshot: DataSnapshot) \{\
+                        items.clear()\
+                        \cf2 for \cf4 (data \cf2 in \cf4 snapshot.
+\f2\i \cf6 children
+\f0\i0 \cf4 ) \{\
+                            items.add(data.getValue(DataModel::\cf2 class\cf4 .
+\f2\i \cf6 java
+\f0\i0 \cf4 )!!)\
+                        \}\
+                        rvAdapter.notifyDataSetChanged()\
+                    \}\
+\
+                    \cf2 override fun \cf8 onCancelled\cf4 (error: DatabaseError) \{\
+                        
+\f2\i TODO
+\f0\i0 ()\
+                    \}\
+                \})\
+\
+        
+\f3\b \}\
+\
+        
+\f0\b0 \cf5 // topAppbar
+\f1 \uc0\u51032  \u50724 \u47480 \u51901  \u48260 \u53948  \u46041 \u51089  \u44396 \u54788 \
+        
+\f0 \cf2 val \cf4 nextDay_Btn = findViewById<ImageButton>(R.id.
+\f2\i \cf6 nextDay_Btn
+\f0\i0 \cf4 )\
+        nextDay_Btn.setOnClickListener 
+\f3\b \{\
+            
+\f0\b0 \cf6 calendar\cf4 .add(Calendar.
+\f2\i \cf6 DATE
+\f0\i0 \cf2 , \cf4 +\cf9 1\cf4 )\
+            \cf6 year \cf4 = \cf6 calendar\cf4 .get(Calendar.
+\f2\i \cf6 YEAR
+\f0\i0 \cf4 )\
+            \cf6 month \cf4 = \cf6 calendar\cf4 .get(Calendar.
+\f2\i \cf6 MONTH
+\f0\i0 \cf4 ) + \cf9 1\
+            \cf6 date \cf4 = \cf6 calendar\cf4 .get(Calendar.
+\f2\i \cf6 DATE
+\f0\i0 \cf4 )\
+\
+            \cf2 if \cf4 (\cf6 todayYear \cf4 == \cf6 year \cf4 && \cf6 todayMonth \cf4 == \cf6 month \cf4 && \cf6 todayDate \cf4 == \cf6 date\cf4 ) \{\
+                date_indicator.
+\f2\i \cf6 text 
+\f0\i0 \cf4 = \cf7 "Today"\
+            \cf4 \} \cf2 else \cf4 \{\
+                date_indicator.
+\f2\i \cf6 text 
+\f0\i0 \cf4 = \cf7 "\cf2 $\{\cf6 year\cf2 \}\cf7 -\cf2 $\{\cf6 month\cf2 \}\cf7 -\cf2 $\{\cf6 date\cf2 \}\cf7 "\
+            \cf4 \}\
+\
+            \cf6 myRef\cf4 .child(\cf7 "User_Memo/\cf2 $\{\cf6 year\cf2 \}\cf7 -\cf2 $\{\cf6 month\cf2 \}\cf7 -\cf2 $\{\cf6 date\cf2 \}\cf7 "\cf4 )\
+                .addListenerForSingleValueEvent(\cf2 object \cf4 : ValueEventListener \{\
+\
+                    \cf11 @SuppressLint\cf4 (\cf7 "NotifyDataSetChanged"\cf4 )\
+                    \cf2 override fun \cf8 onDataChange\cf4 (snapshot: DataSnapshot) \{\
+                        items.clear()\
+                        \cf2 for \cf4 (data \cf2 in \cf4 snapshot.
+\f2\i \cf6 children
+\f0\i0 \cf4 ) \{\
+                            items.add(data.getValue(DataModel::\cf2 class\cf4 .
+\f2\i \cf6 java
+\f0\i0 \cf4 )!!)\
+                        \}\
+                        rvAdapter.notifyDataSetChanged()\
+                    \}\
+\
+                    \cf2 override fun \cf8 onCancelled\cf4 (error: DatabaseError) \{\
+                        
+\f2\i TODO
+\f0\i0 ()\
+                    \}\
+                \})\
+\
+        
+\f3\b \}\
+        
+\f0\b0 \cf5 // RankingActivity
+\f1 \uc0\u47196  \u51060 \u46041 \u54616 \u45716  \u48260 \u53948  \u49444 \u51221 \
+        
+\f0 \cf2 val \cf4 rankingButton = findViewById<ImageButton>(R.id.
+\f2\i \cf6 rankingButton
+\f0\i0 \cf4 )\
+        rankingButton.setOnClickListener 
+\f3\b \{\
+            
+\f0\b0 \cf2 val \cf4 intent = Intent(\cf2 this, \cf4 RankingActivity::\cf2 class\cf4 .
+\f2\i \cf6 java
+\f0\i0 \cf4 )\
+            startActivity(intent)\
+        
+\f3\b \}\
+\
+\
+    
+\f0\b0 \}\
+\
+    \cf2 fun \cf8 checkDatesForDuplicates\cf4 (\
+        datesToCheck: List<Calendar>\cf2 ,\
+        \cf4 dataModel: DataModel\cf2 ,\
+        \cf4 To_Do_list: String\
+    ) \{\
+        \cf2 if \cf4 (datesToCheck.isEmpty()) \{\
+            \cf2 return\
+        \cf4 \}\
+\
+        \cf2 val \cf4 currentDate = datesToCheck.
+\f2\i \cf8 first
+\f0\i0 \cf4 ()\
+        \cf2 val \cf4 year = currentDate.get(Calendar.
+\f2\i \cf6 YEAR
+\f0\i0 \cf4 )\
+        \cf2 val \cf4 month = currentDate.get(Calendar.
+\f2\i \cf6 MONTH
+\f0\i0 \cf4 ) + \cf9 1\
+        \cf2 val \cf4 date = currentDate.get(Calendar.
+\f2\i \cf6 DATE
+\f0\i0 \cf4 )\
+\
+        \cf6 myRef\cf4 .child(\cf7 "User_Memo/\cf2 $\{\cf4 year\cf2 \}\cf7 -\cf2 $\{\cf4 month\cf2 \}\cf7 -\cf2 $\{\cf4 date\cf2 \}\cf7 "\cf4 )\
+            .orderByChild(\cf7 "toDoList"\cf4 )\
+            .equalTo(To_Do_list)\
+            .addListenerForSingleValueEvent(\cf2 object \cf4 : ValueEventListener \{\
+                \cf2 override fun \cf8 onDataChange\cf4 (dataSnapshot: DataSnapshot) \{\
+                    \cf2 if \cf4 (dataSnapshot.exists()) \{\
+                        Toast.makeText(\
+                            \cf2 this\cf10 @MainActivity\cf2 ,\
+                            \cf7 "\cf2 $\{\cf4 year\cf2 \}\cf7 -\cf2 $\{\cf4 month\cf2 \}\cf7 -\cf2 $\{\cf4 date\cf2 \}
+\f1 \cf7 \uc0\u50640  \u51473 \u48373 \u46108  \u54637 \u47785 \u51060  \u51080 \u49845 \u45768 \u45796 
+\f0 ."\cf2 ,\
+                            \cf4 Toast.
+\f2\i \cf6 LENGTH_SHORT\
+                        
+\f0\i0 \cf4 ).show()\
+                    \} \cf2 else \cf4 \{\
+                        \cf6 myRef\
+                            \cf4 .child(\cf7 "User_Memo/\cf2 $\{\cf4 year\cf2 \}\cf7 -\cf2 $\{\cf4 month\cf2 \}\cf7 -\cf2 $\{\cf4 date\cf2 \}\cf7 "\cf4 )\
+                            .push()\
+                            .setValue(dataModel)\
+                    \}\
+\
+                    \cf5 // 
+\f1 \uc0\u45796 \u51020  \u45216 \u51676  \u52376 \u47532 \
+                    
+\f0 \cf4 checkDatesForDuplicates(datesToCheck.
+\f2\i \cf8 drop
+\f0\i0 \cf4 (\cf9 1\cf4 )\cf2 , \cf4 dataModel\cf2 , \cf4 To_Do_list)\
+                \}\
+\
+                \cf2 override fun \cf8 onCancelled\cf4 (databaseError: DatabaseError) \{\
+                    Toast.makeText(\
+                        \cf2 this\cf10 @MainActivity\cf2 ,\
+                        \cf7 "
+\f1 \uc0\u45936 \u51060 \u53552 \u48288 \u51060 \u49828  \u50724 \u47448 
+\f0 : \cf2 $\{\cf4 databaseError.
+\f2\i \cf6 message
+\f0\i0 \cf2 \}\cf7 "\cf2 ,\
+                        \cf4 Toast.
+\f2\i \cf6 LENGTH_SHORT\
+                    
+\f0\i0 \cf4 ).show()\
+                    \cf5 // 
+\f1 \uc0\u45796 \u51020  \u45216 \u51676  \u52376 \u47532 \
+                    
+\f0 \cf4 checkDatesForDuplicates(datesToCheck.
+\f2\i \cf8 drop
+\f0\i0 \cf4 (\cf9 1\cf4 )\cf2 , \cf4 dataModel\cf2 , \cf4 To_Do_list)\
+                \}\
+            \})\
+    \}\
+\
+\}\
+\
+\
+\
+\
+\
+\
+\
+\
+\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+\cf4 -\uc0\u48372 \u44256 \u49436  \u54596 \u49688  \u45236 \u50857 -\
+\uc0\u51452 \u51228  / \u52488 \u44592  \u44592 \u54925  / \u54924 \u51032  \u49324 \u51652  / \u51452 \u50836  \u53076 \u46300  \u51068 \u48512 \u48516 \
+}
