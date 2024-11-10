@@ -1,0 +1,34 @@
+<!DOCTYPE html><html xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8">
+<title>로그인</title></head>
+<style> 
+body {background-color: lightpink;}
+span {color: gray; font-size: 0.7em;}
+button {margin-right: 20px;}
+img {width:280px; height: 330px;}
+</style>
+<body>
+    <div align="center">
+        <h1>Web Bank</h1>
+        <form method="get" action="/login/check">
+            ID: <input type="text" name="id"> <p> <button>login</button>
+            <a href="/member/register">회원가입</a> <p>
+        </form>
+        <img id="img1" src="/common.jpeg" alt="토깽이">
+        <img id="img2" src="/common1.jpeg" alt="고먐미"><br>
+    </div>
+</body>
+<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+<script>
+    $(document).ready(function(){
+        $("#img1").show();
+        $("#img2").hide();
+        $("#img1").click(function(){
+            $("#img1").hide();   $("#img2").show();
+        });
+        $("#img2").click(function(){
+            $("#img1").show();   $("#img2").hide();
+        });
+    });
+</script>
+</html>

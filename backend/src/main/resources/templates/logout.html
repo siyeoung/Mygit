@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8">
+<title>로그아웃</title></head>
+<style>
+    #sp1{color: blue;}
+    .sp2{color: grey; font-size: 0.8em;}
+    img{width: 300px; height: 220px;}
+</style>
+<body>
+<div align="center">
+    <span id="sp1" th:text="${id}">id</span>
+    님께서 로그아웃하셨습니다. <p>다음에 또 만나요!<p>
+    <span class="sp2">
+        (아래 그림을 클릭하시면 첫 화면으로 이동합니다.)
+    </span><br>
+    <a href="/login">
+        <img src="/common2.jpeg" alt="바이바이그림">
+    </a><br>
+</div>
+</body>
+</html>

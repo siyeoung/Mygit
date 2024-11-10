@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8">
+<title>나의 정보</title></head>
+<style>
+    #sp1{color: blue;}
+    fieldset{background-color: #FBF8EF;}
+    table{width: 300px;}
+    button{margin-left: 10px;}
+</style>
+<body>
+    <h3><span id="sp1" th:text="${me.id}">id</span>님의 정보</h3>
+    <form method="get" action="/myinfo/update"><p>
+    <fieldset><legend><strong>나의 정보 조회 및 변경</strong></legend><br>
+    <table>
+     <tr> <td>비번</td> <td><input type="text" name="pw" th:value="${me.pw}">
+     <tr> <td>이름</td> <td><input type="text" name="name" th:value="${me.name}">
+     <tr> <td>폰</td> <td><input type="text" name="phone" th:value="${me.phone}">
+     <tr> <td>현재 잔액</td> <td><input type="text" th:value="${won}" disabled>
+     <tr> <td>가입 일시</td> <td><input type="text" th:value="${me.rdate}" disabled>
+    </table><p>
+    </fieldset><p>
+    <a href="/menu">메뉴로 돌아가기</a> <button>변경된 내용으로 수정</button>
+    </form>
+</body>
+</html>

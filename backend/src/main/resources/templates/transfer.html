@@ -1,0 +1,21 @@
+<!DOCTYPE html><html xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8">
+<title>이체</title></head>
+<style>
+    body{background-color: #ECE0F8;}
+    #sp1{color: blue;}
+</style>
+<body><div align="center">
+    <h2>즉시 이체</h2><hr>
+    <span id="sp1" th:text="${id}">id</span>님, 수신인 ID와 이체금액을 입력해 주세요. <br>
+    <hr><p>
+    <form method="post" action="/transfer">
+        <table>
+            <tr> <td>수신인ID</td> <td><input type="text" name="tid" required></td>
+            <tr> <td><input type="number" name="money" required> 원</td>
+        </table><p>
+            <button>이체진행</button>
+    </form><p>
+        <a href="/menu">메뉴로 돌아가기</a>
+</div></body>
+</html>

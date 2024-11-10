@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8">
+<title>메뉴</title></head>
+<style>
+    body{background-color: #FFF29E;}
+    #sp1{color:blue;}
+</style>
+<body>
+    <h2>MENU</h2><hr>
+    <span id="sp1" th:text="${id}">id</span>님, 어떤 업무를 하시겠습니까?
+    <hr><p>
+    <ul>
+        <li><a href="/deposit">입금</a>  <li><a href="/withdrawal">출금</a>
+        <li><a href="/transfer">이체</a>  <li><a href="/myhistory">나의 거래 내역</a>
+        <li><a href="/myinfo">나의 정보</a>   <li><a href="/qa/question">게시판</a>
+        <li><a href="/bankmap" onclick="window.open(this.href,'_blank','width=300,height=300,left=300,location=no'); return false;">오시는길</a></li>
+        <li><a href="/bankinfo" onclick="window.open(this.href,'_blank','width=300,height=300,left=300,location=no'); return false;">은행소개</a>  
+        <li><a href="/logout">로그아웃</a>
+    </ul>
+    <ol th:if="${id} == 'admin' ">
+        <li><a href="/member/list">전체 회원 리스트(admin only)</a>
+        <li><a href="/bank/list">전체 거래 내역(admin only)</a>
+        <li><a href="/qa/answer">게시판 답변 등록(admin only)</a>
+    </ol>
+</body>
+</html>

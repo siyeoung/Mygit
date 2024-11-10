@@ -1,0 +1,20 @@
+<!DOCTYPE html><html xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8">
+<title>입금</title></head>
+<style>
+    body{background-color: #FBEFF5;}
+    #sp1{color: blue;}
+    .in1{text-align: center;}
+</style>
+<body><div align="center">
+    <h2>입 금</h2>
+    <span id="sp1" th:text="${id}">id</span>님, 입금액을 입력해주세요 <p>
+    <form method="post" action="/deposit">
+        5만원권: <input class="in1" type="number" name="oman"> 장<p>
+        1만원권: <input class="in1" type="number" name="ilman"> 장<p>
+        <button>입금진행</button>
+    </form>
+    <a href="/menu">메뉴로 돌아가기</a>
+</div>
+</body>
+</html>

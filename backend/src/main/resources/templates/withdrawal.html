@@ -1,0 +1,20 @@
+<!DOCTYPE html><html xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8">
+<title>출금</title></head>
+<style>
+    body{background-color: #E0F8F7;}
+    #sp1{color: blue;}
+    .in1{text-align: center;}
+</style>
+<body>
+    <div align="center">
+    <h2>출 금</h2>
+    <span id="sp1" th:text="${id}">id</span>님, 출금액을 만원 단위로 입력해주세요.<p>
+    <form method="post" action="/withdrawal">
+        출금: <input class="in1" type="number" name="money" required> 만원<p>
+            <button>출금 진행</button>
+    </form>
+    <a href="/menu">메뉴로 돌아가기</a>
+    </div>
+</body>
+</html>

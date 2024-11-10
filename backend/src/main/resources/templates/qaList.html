@@ -1,0 +1,27 @@
+<!DOCTYPE html><html xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"></head>
+<div th:fragment="here">
+<style>
+    table{width:880;}
+    #navy{background-color: navy; color: #E6F8E0; position:sticky; top:0px;}
+    #tableWrapper{background-color: lightcyan; width:900px; height:300px; overflow:auto;}
+    .gray{color: gray; font-size: 0.8em;}
+    #brown{color: brown; font-size: 0.9em;}
+</style>
+<div id="tableWrapper">
+<table border="1">
+<tr id="navy">
+    <th>no</th> <th>ID</th> <th>질문일시</th> <th>질문내용</th> <th>답변일시</th> <th>답변내용</th>
+<tr th:each="qa:${arr}" >
+    <td th:text="${qa.no}">no</td>
+    <td th:text="${qa.id}">id</td>
+    <td class="gray" th:text="${qa.qdate}">qdate</td>
+    <td th:text="${qa.question}">question</td>
+
+    <td class="gray" th:if="${qa.adate}==null" th:text="(soon)"></td>
+    <td class="gray" th:unless="${qa.adate}==null" th:text="${qa.adate}"></td>
+
+    <td id="brown" th:text="${qa.answer}">answer</td>
+</table></div><p>
+</div>
+</html>

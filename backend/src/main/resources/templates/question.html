@@ -1,0 +1,21 @@
+<!DOCTYPE html><html xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8">
+<title>Q&A 질문하기</title></head>
+<style>
+    body{background-color: #F8ECE0;}
+    #sp1{color: blue; font-weight: bold;}
+</style>
+<body>
+<h2>게시판(Q&A)</h2>
+<hr>
+<span id="sp1" th:text="${id}">id</span>님, 궁금하신 점이 있으세요? 질문을 주시면 답변을 드립니다.<br>
+<hr><p>
+<div th:replace="~{qaList::here}"></div>
+<form method="post" action="/qa/question">
+    질문입력: <br>
+    <textarea name="question" rows="4" cols="80" required></textarea>
+    <button>질문등록</button>
+</form><p>
+<a href="/menu">메뉴로 돌아가기</a>
+</body>
+</html>

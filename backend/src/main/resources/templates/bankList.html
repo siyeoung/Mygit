@@ -1,0 +1,30 @@
+<!DOCTYPE html><html xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8">
+<title>전체 거래 내역</title></head>
+<style>
+    table{width: 600px;}
+    .td1{text-align: center;}
+    #tr1{background-color: #F8ECE0;}
+    .td2{color:gray; font-size: 0.8em;}
+    .td3{text-align: right;}
+</style>
+<body><div align="center">
+<h3>전체 거래 내역 (id, 최근거래 순) [관리자용] </h3>
+<table border="1">
+    <tr id="tr1">
+        <th>고객ID</th> <th>거래일시</th> <th>출금액</th> <th>이채여부</th> <th>이체상대</th>
+    <tr th:each="a:${arr}">
+        <td class="td1" th:text="${a.id}">id</td>
+        <td class="td2" th:text="${a.tdate}">tdate</td>
+        <td class="td3" th:text="${a.de}">de</td>
+        <td class="td3" th:text="${a.wi}">wi</td>
+        <td class="td1" th:switch="${a.tcode}">
+            <span th:case=0>-</span>
+            <span th:case=1>이체보냄</span>
+            <span th:case=2>이체받음</span>
+        <td class="td1" th:text="${a.tid}">tid</td>
+    </tr>
+</table><br>
+<a href="/menu">메뉴로 돌아가기</a>
+</div></body>
+</html>
